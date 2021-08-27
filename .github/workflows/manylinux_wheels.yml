@@ -10,7 +10,7 @@ on:
 env:
   KIVY_SPLIT_EXAMPLES: 1
   SERVER_IP: '159.203.106.198'
-#  DOCKER_IMAGE: 'quay.io/pypa/manylinux2010_x86_64'
+  DOCKER_IMAGE: 'quay.io/pypa/manylinux2010_x86_64'
 
 jobs:
   kivy_examples_create:
@@ -38,16 +38,9 @@ jobs:
 
   manylinux_wheel_create:
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        DOCKER_IMAGE: [quay.io/pypa/manylinux2010_x86_64, quay.io/pypa/manylinux2014_aarch64]
-      fail-fast: false    
-   # if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
+    if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
     steps:
     - uses: actions/checkout@v2
-    - name: Set up QEMU
-      if: ${{ matrix.DOCKER_IMAGE == 'quay.io/pypa/manylinux2014_aarch64' }}
-      uses: docker/setup-qemu-action@v1
     - name: Set up Python 3.x
       uses: actions/setup-python@v2
       with:
@@ -59,13 +52,44 @@ jobs:
     - name: Make wheels
       run: |
         source .ci/ubuntu_ci.sh
-        generate_manylinux2010_wheels ${{ matrix.DOCKER_IMAGE }}
+        generate_manylinux2010_wheels $DOCKER_IMAGE
     - name: Upload wheels as artifact
       uses: actions/upload-artifact@v2
       with:
         name: manylinux_wheels
         path: dist
 
+  manylinux_aarch64_wheel_create:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      img: quay.io/pypa/manylinux2014_aarch64
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x      
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - name: Build Wheels
+      run: |
+            docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+            ${{ env.img }} \
+            bash -exc 'source .ci/ubuntu_ci.sh update_version_metadata && \
+            python3 -m pip install twine && \
+            mkdir dist && \
+            chmod +x .ci/build-wheels-linux.sh && \
+            source .ci/build-wheels-linux.sh && \
+            sudo rm dist/*-linux*'
+    - name: Upload wheels as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: manylinux_wheels
+        path: dist            
   manylinux_wheel_upload:
     runs-on: ubuntu-18.04
     needs: [manylinux_wheel_create, kivy_examples_create]
@@ -107,7 +131,6 @@ jobs:
       run: |
         source .ci/ubuntu_ci.sh
         upload_artifacts_to_pypi
-
   manylinux_wheel_test:
     runs-on: ubuntu-18.04
     needs: [manylinux_wheel_create, kivy_examples_create]
