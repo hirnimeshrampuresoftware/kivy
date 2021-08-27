@@ -56,7 +56,7 @@ jobs:
     - name: Make wheels
       run: |
         source .ci/ubuntu_ci.sh
-        generate_manylinux2010_wheels $DOCKER_IMAGE
+        generate_manylinux2010_wheels ${{ matrix.DOCKER_IMAGE }}
     - name: Upload wheels as artifact
       uses: actions/upload-artifact@v2
       with:
