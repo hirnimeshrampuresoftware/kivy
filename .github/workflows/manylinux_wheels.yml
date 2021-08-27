@@ -10,7 +10,7 @@ on:
 env:
   KIVY_SPLIT_EXAMPLES: 1
   SERVER_IP: '159.203.106.198'
-  DOCKER_IMAGE: 'quay.io/pypa/manylinux2010_x86_64'
+#  DOCKER_IMAGE: 'quay.io/pypa/manylinux2010_x86_64'
 
 jobs:
   kivy_examples_create:
@@ -38,6 +38,10 @@ jobs:
 
   manylinux_wheel_create:
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        DOCKER_IMAGE: [quay.io/pypa/manylinux2010_x86_64, quay.io/pypa/manylinux2014_aarch64]
+      fail-fast: false    
    # if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
     steps:
     - uses: actions/checkout@v2
