@@ -45,6 +45,9 @@ jobs:
    # if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
     steps:
     - uses: actions/checkout@v2
+    - name: Set up QEMU
+      if: ${{ matrix.DOCKER_IMAGE == 'quay.io/pypa/manylinux2014_aarch64' }}
+      uses: docker/setup-qemu-action@v1
     - name: Set up Python 3.x
       uses: actions/setup-python@v2
       with:
