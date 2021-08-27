@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e -x
 
+yum install -y epel-release
+yum-config-manager --enable epel
+
 yum -y install  autoconf automake cmake gcc gcc-c++ git make pkgconfig zlib-devel portmidi portmidi-devel Xorg-x11-server-deve mesa-libEGL-devel mtdev-devel mesa-libEGL freetype freetype-devel openjpeg openjpeg-devel libpng libpng-devel libtiff libtiff-devel libwebp libwebp-devel dbus-devel dbus ibus-devel ibus libsamplerate-devel libsamplerate libudev-devel libudev libmodplug-devel libmodplug libvorbis-devel libvorbis flac-devel flac libjpeg-turbo-devel libjpeg-turbo wget;
 mkdir ~/kivy_sources;
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/kivy_build/lib;
@@ -49,8 +52,8 @@ for PYBIN in /opt/python/*3*/bin; do
         KIVY_SPLIT_EXAMPLES=1 USE_X11=1 USE_SDL2=1 USE_PANGOFT2=0 USE_GSTREAMER=0 PKG_CONFIG_PATH="$HOME/kivy_build/lib/pkgconfig" "${PYBIN}/pip" wheel --no-deps . -w dist/;
     fi
 done
-
+#--plat manylinux2010_x86_64 
 for name in /io/dist/*.whl; do
     echo "Fixing $name";
-    auditwheel repair --plat manylinux2010_x86_64 $name -w /io/dist/;
+    auditwheel repair $name -w /io/dist/;
 done
