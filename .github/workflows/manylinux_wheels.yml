@@ -75,8 +75,8 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} \
-            bash -exc 'apt install python3 && \
-            apt install python3-pip && \ 
+            bash -exc 'yum -y install python3 && \
+            yum -y install python3-pip && \ 
             source .ci/ubuntu_ci.sh update_version_metadata && \
             python3 -m pip install twine && \
             mkdir dist && \
