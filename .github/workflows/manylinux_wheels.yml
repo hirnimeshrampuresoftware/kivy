@@ -68,11 +68,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Set up Python 3.x
+    - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
-        python-version: 3.x      
-    - name: Set up QEMU
+        python-version: 3.7
+    - name: Set up QEMU        
       id: qemu
       uses: docker/setup-qemu-action@v1
     - name: Build Wheels
