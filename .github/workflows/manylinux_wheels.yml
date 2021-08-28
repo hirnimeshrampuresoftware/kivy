@@ -65,6 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       img: quay.io/pypa/manylinux2014_aarch64
+      py: /opt/python/cp37-cp37m/bin/python
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -75,15 +76,18 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} \
-            bash -exc 'yum -y install python3 && \
-            yum -y install python3-pip && \
-            pip3 install setuptools-rust wheel && \
+            bash -exc '${{ env.py }} -m venv .env && \
+            source .env/bin/activate && \
+            #yum -y install python3 && \
+            #yum -y install python3-pip && \
+            pip install setuptools-rust wheel && \
             source .ci/ubuntu_ci.sh update_version_metadata && \
             python3 -m pip install twine && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
             source .ci/build-wheels-linux.sh && \
-            sudo rm dist/*-linux*'
+            sudo rm dist/*-linux*
+            deactivate'
     - name: Upload wheels as artifact
       uses: actions/upload-artifact@v2
       with:
