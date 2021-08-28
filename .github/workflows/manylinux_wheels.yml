@@ -68,10 +68,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
     - name: Set up QEMU        
       id: qemu
       uses: docker/setup-qemu-action@v1
@@ -79,7 +75,9 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} \
-            bash -exc 'source .ci/ubuntu_ci.sh update_version_metadata && \
+            bash -exc 'apt install python3 && \
+            apt install python3-pip && \ 
+            source .ci/ubuntu_ci.sh update_version_metadata && \
             python3 -m pip install twine && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
