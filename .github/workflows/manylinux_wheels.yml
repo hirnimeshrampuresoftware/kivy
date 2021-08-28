@@ -77,6 +77,7 @@ jobs:
             ${{ env.img }} \
             bash -exc 'yum -y install python3 && \
             yum -y install python3-pip && \
+            pip3 install setuptools && \
             source .ci/ubuntu_ci.sh update_version_metadata && \
             python3 -m pip install twine && \
             mkdir dist && \
