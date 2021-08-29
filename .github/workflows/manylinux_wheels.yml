@@ -78,11 +78,10 @@ jobs:
             ${{ env.img }} \
             bash -exc '${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
-            #yum -y install python3 && \
-            #yum -y install python3-pip && \
-            pip install setuptools-rust wheel && \
+            yum -y install sudo && \
+            #pip install setuptools-rust wheel && \
             source .ci/ubuntu_ci.sh update_version_metadata && \
-            python3 -m pip install twine && \
+            #python3 -m pip install twine && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
             source .ci/build-wheels-linux.sh && \
