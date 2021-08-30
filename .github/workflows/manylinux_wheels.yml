@@ -186,6 +186,7 @@ jobs:
         path: .benchmarks-kivy
 
   manylinux_aarch64_wheel_test:
+    needs: [manylinux_aarch64_wheel_create]
     strategy:
       matrix:
         pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]    
