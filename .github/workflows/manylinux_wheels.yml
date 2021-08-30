@@ -79,9 +79,7 @@ jobs:
             bash -exc '${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
             yum -y install sudo && \
-            #pip install setuptools-rust wheel && \
             source .ci/ubuntu_ci.sh update_version_metadata && \
-            #python3 -m pip install twine && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
             source .ci/build-wheels-linux.sh && \
@@ -94,7 +92,7 @@ jobs:
         path: dist            
   manylinux_wheel_upload:
     runs-on: ubuntu-18.04
-    needs: [manylinux_wheel_create, kivy_examples_create]
+    needs: [manylinux_wheel_create, kivy_examples_create, manylinux_aarch64_wheel_create]
     if: github.event_name != 'pull_request'
     steps:
     - uses: actions/checkout@v2
@@ -187,6 +185,39 @@ jobs:
         name: benchmarks
         path: .benchmarks-kivy
 
+  manylinux_aarch64_wheel_test:
+    strategy:
+      matrix:
+        pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]    
+      fail-fast: false
+    runs-on: ubuntu-18.04
+    env:
+      img: quay.io/pypa/manylinux2014_aarch64
+      py: /opt/python/cp37-cp37m/bin/python
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up QEMU        
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - uses: actions/download-artifact@v2
+      with:
+        name: manylinux_wheels
+        path: dist      
+    - name: Test Wheels
+      run: |
+            docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
+            ${{ env.img }} \
+            bash -exc '${{ env.py }} -m venv .env && \
+            source .env/bin/activate && \
+            source .ci/ubuntu_ci.sh
+            install_kivy_test_run_apt_deps
+            install_kivy_test_wheel_run_pip_deps && \
+            source .ci/ubuntu_ci.sh prepare_env_for_unittest && \
+            source .ci/ubuntu_ci.sh install_kivy_wheel && \
+            source .ci/ubuntu_ci.sh test_kivy_install && \
+            deactivate'
+            
   sdist_test:
     runs-on: ubuntu-18.04
     env:
