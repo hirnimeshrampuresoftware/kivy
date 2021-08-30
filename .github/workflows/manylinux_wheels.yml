@@ -194,7 +194,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       img: quay.io/pypa/manylinux2014_aarch64
-      py: /opt/python/cp37-cp37m/bin/python
+      py: opt/python/${{ matrix.pyver }}/bin/python
     steps:
     - name: Checkout
       uses: actions/checkout@v2
