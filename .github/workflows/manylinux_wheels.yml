@@ -216,8 +216,7 @@ jobs:
             bash -exc 'source .ci/ubuntu_ci.sh install_kivy_test_run_apt_deps install_kivy_test_wheel_run_pip_deps && \
             source .ci/ubuntu_ci.sh prepare_env_for_unittest && \
             source .ci/ubuntu_ci.sh install_kivy_wheel && \
-            source .ci/ubuntu_ci.sh test_kivy_install && \
-            deactivate'
+            source .ci/ubuntu_ci.sh test_kivy_install'
             #${{ env.py }} -m venv .env && \ source .env/bin/activate && \           
   sdist_test:
     runs-on: ubuntu-18.04
