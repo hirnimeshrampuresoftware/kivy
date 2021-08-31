@@ -194,10 +194,14 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       img: quay.io/pypa/manylinux2014_aarch64
-      py: opt/python/${{ matrix.pyver }}/bin/python
+      #py: opt/python/${{ matrix.pyver }}/bin/python
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.pyver }}      
     - name: Set up QEMU        
       id: qemu
       uses: docker/setup-qemu-action@v1
@@ -209,13 +213,12 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
             ${{ env.img }} \
-            bash -exc 'source .env/bin/activate && \
-            source .ci/ubuntu_ci.sh install_kivy_test_run_apt_deps install_kivy_test_wheel_run_pip_deps && \
+            bash -exc 'source .ci/ubuntu_ci.sh install_kivy_test_run_apt_deps install_kivy_test_wheel_run_pip_deps && \
             source .ci/ubuntu_ci.sh prepare_env_for_unittest && \
             source .ci/ubuntu_ci.sh install_kivy_wheel && \
             source .ci/ubuntu_ci.sh test_kivy_install && \
             deactivate'
-            #${{ env.py }} -m venv .env && \            
+            #${{ env.py }} -m venv .env && \ source .env/bin/activate && \           
   sdist_test:
     runs-on: ubuntu-18.04
     env:
