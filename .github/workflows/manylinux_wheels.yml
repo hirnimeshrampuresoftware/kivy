@@ -77,7 +77,8 @@ jobs:
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
             ${{ env.img }} \
             bash -exc 'yum -y install sudo && \
-            source .ci/ubuntu_ci.sh update_version_metadata && \
+            source .ci/ubuntu_ci.sh
+            update_version_metadata && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
             source .ci/build-wheels-linux.sh && \
