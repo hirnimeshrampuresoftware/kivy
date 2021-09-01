@@ -212,11 +212,15 @@ jobs:
             bash -exc '${{ env.py }} -m venv .env && \
             whereis python && \
             source .env/bin/activate && \
-            source .ci/ubuntu_ci.sh install_kivy_test_run_apt_deps && \
-            source .ci/ubuntu_ci.sh install_kivy_test_wheel_run_pip_deps && \
-            source .ci/ubuntu_ci.sh prepare_env_for_unittest && \
-            source .ci/ubuntu_ci.sh install_kivy_wheel && \
-            source .ci/ubuntu_ci.sh test_kivy_install && \
+            source .ci/ubuntu_ci.sh 
+            install_kivy_test_run_apt_deps
+            install_kivy_test_wheel_run_pip_deps && \
+            source .ci/ubuntu_ci.sh 
+            prepare_env_for_unittest && \
+            source .ci/ubuntu_ci.sh 
+            install_kivy_wheel && \
+            source .ci/ubuntu_ci.sh 
+            test_kivy_install && \
             deactivate'
   
   sdist_test:
