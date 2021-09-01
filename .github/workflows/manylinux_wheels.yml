@@ -191,7 +191,7 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     env:
-      py: opt/python/${{ matrix.pyver }}/bin/python
+      py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
       DISPLAY: ':99.0'
     steps:
