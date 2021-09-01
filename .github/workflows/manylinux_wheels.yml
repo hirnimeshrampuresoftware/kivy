@@ -38,7 +38,7 @@ jobs:
 
   manylinux_wheel_create:
     runs-on: ubuntu-18.04
-    if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
+   # if: github.event_name == 'schedule' || (github.event_name == 'create' && github.event.ref_type == 'tag') || contains(github.event.head_commit.message, '[build wheel]') || contains(github.event.head_commit.message, '[build wheel linux]') || contains(github.event.pull_request.title, '[build wheel]') || contains(github.event.pull_request.title, '[build wheel linux]')
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.x
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       img: quay.io/pypa/manylinux2014_aarch64
-      py: /opt/python/cp37-cp37m/bin/python
+      #py: /opt/python/cp37-cp37m/bin/python
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -76,24 +76,22 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
             ${{ env.img }} \
-            bash -exc '${{ env.py }} -m venv .env && \
-            source .env/bin/activate && \
-            yum -y install sudo && \
+            bash -exc 'yum -y install sudo && \
             source .ci/ubuntu_ci.sh update_version_metadata && \
             mkdir dist && \
             chmod +x .ci/build-wheels-linux.sh && \
             source .ci/build-wheels-linux.sh && \
-            sudo rm dist/*-linux*
-            deactivate'
+            sudo rm dist/*-linux*'
     - name: Upload wheels as artifact
       uses: actions/upload-artifact@v2
       with:
         name: manylinux_wheels
-        path: dist            
+        path: dist
+
   manylinux_wheel_upload:
     runs-on: ubuntu-18.04
     needs: [manylinux_wheel_create, kivy_examples_create, manylinux_aarch64_wheel_create]
-    if: github.event_name != 'pull_request'
+ #   if: github.event_name != 'pull_request'
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.x
@@ -210,7 +208,8 @@ jobs:
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
             ${{ env.img }} \
-            bash -exc '${{ env.py }} -m venv .env && \ 
+            bash -exc '${{ env.py }} -m venv .env && \
+            whereis python && \
             source .env/bin/activate && \
             source .ci/ubuntu_ci.sh install_kivy_test_run_apt_deps && \
             source .ci/ubuntu_ci.sh install_kivy_test_wheel_run_pip_deps && \
