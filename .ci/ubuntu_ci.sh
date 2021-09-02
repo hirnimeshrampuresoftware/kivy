@@ -34,12 +34,12 @@ install_kivy_test_run_apt_deps() {
 
 install_kivy_test_run_yum_deps() {
   yum install -y sudo
-  sudo yum update
+  sudo yum update -y
   sudo yum install -y epel-release
   sudo yum-config-manager --enable epel
   sudo yum install -y SDL2-devel SDL_ttf-devel SDL2_image SDL2_mixer gstreamer1-devel gstreamer1 gstreamer1-plugins-base libjpeg-devel libtiff-devel libX11-devel mtdev-devel mesa-libGL-devel 
-  sudo yum install dnf
-  dnf install xorg-x11-server-Xvfb pulseaudio xsel
+  sudo yum install -y dnf
+  dnf -y install xorg-x11-server-Xvfb pulseaudio xsel
 }
 
 install_python() {
