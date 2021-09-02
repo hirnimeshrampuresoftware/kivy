@@ -213,7 +213,7 @@ jobs:
             whereis python && \
             source .env/bin/activate && \
             source .ci/ubuntu_ci.sh 
-            install_kivy_test_run_apt_deps
+            install_kivy_test_run_yum_deps
             install_kivy_test_wheel_run_pip_deps && \
             source .ci/ubuntu_ci.sh 
             prepare_env_for_unittest && \
