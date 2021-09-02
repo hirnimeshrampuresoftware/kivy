@@ -32,7 +32,7 @@ install_kivy_test_run_apt_deps() {
   sudo apt-get -y install xvfb pulseaudio xsel
 }
 
-install_kivy_test_run_apt_deps() {
+install_kivy_test_run_yum_deps() {
   yum install -y sudo
   sudo yum update
   sudo yum install -y epel-release
