@@ -188,12 +188,12 @@ jobs:
     needs: [manylinux_aarch64_wheel_create]
     strategy:
       matrix:
-        pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]    
+        pyver: [ '3.6', '3.7', '3.8', '3.9' ]
       fail-fast: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
-      py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: quay.io/pypa/manylinux2014_aarch64
+      py: python${{ matrix.pyver }}
+      #img: quay.io/pypa/manylinux2014_aarch64
       DISPLAY: ':99.0'
     steps:
     - name: Checkout
@@ -208,16 +208,21 @@ jobs:
     - name: Test Wheels
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
-            ${{ env.img }} \
-            bash -exc '${{ env.py }} -m venv .env && \
-            whereis python && \
+            arm64v8/ubuntu \
+            bash -exc 'apt-get update && \
+            apt-get install -y sudo && \
+            ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt-get install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && \
+            apt install software-properties-common -y && \
+            sudo add-apt-repository ppa:deadsnakes/ppa -y && \
+            apt install -y ${{ env.py }} && \
+            apt install -y ${{ env.py }}-venv && \
+            ${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
+            python --version && \
             source .ci/ubuntu_ci.sh 
-            install_kivy_test_run_yum_deps
-            install_kivy_test_wheel_run_pip_deps && \
-            source .ci/ubuntu_ci.sh 
-            prepare_env_for_unittest && \
-            source .ci/ubuntu_ci.sh 
+            install_kivy_test_run_apt_deps
+            install_kivy_test_wheel_run_pip_deps
+            prepare_env_for_unittest
             install_kivy_wheel && \
             source .ci/ubuntu_ci.sh 
             test_kivy_install && \
