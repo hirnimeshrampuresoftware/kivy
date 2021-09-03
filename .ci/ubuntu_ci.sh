@@ -25,6 +25,11 @@ generate_sdist() {
 
 install_kivy_test_run_apt_deps() {
   sudo apt-get update
+  git clone https://github.com/matham/ffpyplayer
+  cd ffpyplayer/
+  sudo apt-get -y install libavdevice-dev
+  python setup.py install
+  cd ..
   sudo apt-get -y install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev
   sudo apt-get -y install libgstreamer1.0-dev gstreamer1.0-alsa gstreamer1.0-plugins-base
   sudo apt-get -y install libsmpeg-dev libswscale-dev libavformat-dev libavcodec-dev libjpeg-dev libtiff5-dev libx11-dev libmtdev-dev
@@ -132,8 +137,7 @@ test_kivy_install() {
   plugins = kivy.tools.coverage
 
 EOF
-  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest .
-  #--maxfail=10 --timeout=300
+  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest . --maxfail=10 --timeout=300
 }
 
 upload_coveralls() {
