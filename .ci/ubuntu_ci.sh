@@ -122,9 +122,9 @@ test_kivy_benchmark() {
 }
 
 test_kivy_install() {
+  sudo apt-get -y install git libavdevice-dev
   git clone https://github.com/matham/ffpyplayer
   cd ffpyplayer/
-  sudo apt-get -y install libavdevice-dev
   python setup.py install
   cd ~
   python3 -c 'import kivy'
