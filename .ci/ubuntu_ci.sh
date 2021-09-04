@@ -92,6 +92,13 @@ install_kivy_examples_wheel() {
 }
 
 install_kivy_wheel() {
+  sudo apt-get -y install git libavdevice-dev
+  sudo apt-get -y install pythpn3-dev
+  git clone https://github.com/matham/ffpyplayer
+  cd ffpyplayer/
+  python setup.py install
+  cd ..
+  
   root="$(pwd)"
   cd ~
 
@@ -122,10 +129,6 @@ test_kivy_benchmark() {
 }
 
 test_kivy_install() {
-  sudo apt-get -y install git libavdevice-dev
-  git clone https://github.com/matham/ffpyplayer
-  cd ffpyplayer/
-  python setup.py install
   cd ~
   python3 -c 'import kivy'
   test_path=$(KIVY_NO_CONSOLELOG=1 python3 -c 'import kivy.tests as tests; print(tests.__path__[0])' --config "kivy:log_level:error")
