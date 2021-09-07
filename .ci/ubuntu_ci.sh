@@ -25,7 +25,6 @@ generate_sdist() {
 
 install_kivy_test_run_apt_deps() {
   sudo apt-get update
-  python --version
   sudo apt-get -y install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev
   sudo apt-get -y install libgstreamer1.0-dev gstreamer1.0-alsa gstreamer1.0-plugins-base
   sudo apt-get -y install libsmpeg-dev libswscale-dev libavformat-dev libavcodec-dev libjpeg-dev libtiff5-dev libx11-dev libmtdev-dev
@@ -40,7 +39,6 @@ install_python() {
 install_kivy_test_run_pip_deps() {
   curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   python3 get-pip.py --user
-  python --version
   python3 -m pip install --upgrade pip setuptools wheel
   CYTHON_INSTALL=$(
     KIVY_NO_CONSOLELOG=1 python3 -c \
@@ -60,7 +58,6 @@ install_kivy_test_wheel_run_pip_deps() {
 }
 
 prepare_env_for_unittest() {
-  python --version
   /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background \
     --exec /usr/bin/Xvfb -- :99 -screen 0 1280x720x24 -ac +extension GLX
 }
@@ -82,8 +79,8 @@ install_kivy_examples_wheel() {
 }
 
 install_kivy_wheel() {
-  python --version
-  sudo apt-get -y install ${{ matrix.python }}-dev
+  version=$1
+  sudo apt-get -y install $version-dev
   sudo apt-get -y install git libavdevice-dev
  # git clone https://github.com/matham/ffpyplayer
  # cd ffpyplayer/
