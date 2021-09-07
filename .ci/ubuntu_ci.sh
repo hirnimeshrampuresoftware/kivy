@@ -83,8 +83,8 @@ install_kivy_examples_wheel() {
 
 install_kivy_wheel() {
   python --version
- # sudo apt-get -y install git libavdevice-dev
-  sudo apt-get -y install python3-dev
+  sudo apt-get -y install ${{ env.py }}-dev
+  sudo apt-get -y install git libavdevice-dev
  # git clone https://github.com/matham/ffpyplayer
  # cd ffpyplayer/
  # python setup.py install
