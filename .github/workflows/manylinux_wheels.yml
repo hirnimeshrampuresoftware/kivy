@@ -223,8 +223,7 @@ jobs:
             install_kivy_test_run_apt_deps
             install_kivy_test_wheel_run_pip_deps
             prepare_env_for_unittest
-            install_kivy_wheel ${{ env.py }} && \
-            source .ci/ubuntu_ci.sh 
+            install_kivy_wheel ${{ env.py }}
             test_kivy_install && \
             deactivate'
   
