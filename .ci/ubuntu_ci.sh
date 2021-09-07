@@ -25,23 +25,12 @@ generate_sdist() {
 
 install_kivy_test_run_apt_deps() {
   sudo apt-get update
+  python --version
   sudo apt-get -y install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev
   sudo apt-get -y install libgstreamer1.0-dev gstreamer1.0-alsa gstreamer1.0-plugins-base
   sudo apt-get -y install libsmpeg-dev libswscale-dev libavformat-dev libavcodec-dev libjpeg-dev libtiff5-dev libx11-dev libmtdev-dev
   sudo apt-get -y install build-essential libgl1-mesa-dev libgles2-mesa-dev
   sudo apt-get -y install xvfb pulseaudio xsel
-}
-
-install_kivy_test_run_yum_deps() {
-  yum install -y sudo
-  sudo yum update -y
-  sudo yum install -y epel-release
-  #sudo yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm
-  #sudo yum install -y ffmpeg-devel
-  sudo yum-config-manager --enable epel
-  sudo yum install -y SDL2-devel SDL_ttf-devel SDL2_image SDL2_mixer gstreamer1-devel gstreamer1 gstreamer1-plugins-base libjpeg-devel libtiff-devel libX11-devel mtdev-devel mesa-libGL-devel 
-  sudo yum install -y dnf
-  dnf -y install xorg-x11-server-Xvfb pulseaudio xsel
 }
 
 install_python() {
@@ -51,7 +40,7 @@ install_python() {
 install_kivy_test_run_pip_deps() {
   curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   python3 get-pip.py --user
-
+  python --version
   python3 -m pip install --upgrade pip setuptools wheel
   CYTHON_INSTALL=$(
     KIVY_NO_CONSOLELOG=1 python3 -c \
@@ -71,6 +60,7 @@ install_kivy_test_wheel_run_pip_deps() {
 }
 
 prepare_env_for_unittest() {
+  python --version
   /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background \
     --exec /usr/bin/Xvfb -- :99 -screen 0 1280x720x24 -ac +extension GLX
 }
@@ -92,12 +82,13 @@ install_kivy_examples_wheel() {
 }
 
 install_kivy_wheel() {
-  sudo apt-get -y install git libavdevice-dev
+  python --version
+ # sudo apt-get -y install git libavdevice-dev
   sudo apt-get -y install python3-dev
-  git clone https://github.com/matham/ffpyplayer
-  cd ffpyplayer/
-  python setup.py install
-  cd ..
+ # git clone https://github.com/matham/ffpyplayer
+ # cd ffpyplayer/
+ # python setup.py install
+  #cd ..
   
   root="$(pwd)"
   cd ~
@@ -129,6 +120,7 @@ test_kivy_benchmark() {
 }
 
 test_kivy_install() {
+  python --version
   cd ~
   python3 -c 'import kivy'
   test_path=$(KIVY_NO_CONSOLELOG=1 python3 -c 'import kivy.tests as tests; print(tests.__path__[0])' --config "kivy:log_level:error")
