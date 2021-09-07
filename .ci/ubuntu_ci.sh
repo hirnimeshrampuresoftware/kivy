@@ -79,9 +79,11 @@ install_kivy_examples_wheel() {
 }
 
 install_kivy_wheel() {
-  version=$1
-  sudo apt-get -y install $version-dev
-  sudo apt-get -y install git libavdevice-dev
+  if [ `uname -m` == "aarch64" ]; then  
+    version=$1;
+    sudo apt-get -y install $version-dev;
+    sudo apt-get -y install git libavdevice-dev;
+  fi
  # git clone https://github.com/matham/ffpyplayer
  # cd ffpyplayer/
  # python setup.py install
