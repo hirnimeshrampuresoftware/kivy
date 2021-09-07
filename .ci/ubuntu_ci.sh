@@ -83,7 +83,7 @@ install_kivy_examples_wheel() {
 
 install_kivy_wheel() {
   python --version
-  sudo apt-get -y install ${{ matrix.pyver }}-dev
+  sudo apt-get -y install ${{ matrix.python }}-dev
   sudo apt-get -y install git libavdevice-dev
  # git clone https://github.com/matham/ffpyplayer
  # cd ffpyplayer/
