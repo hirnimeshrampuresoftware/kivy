@@ -130,7 +130,8 @@ test_kivy_install() {
   plugins = kivy.tools.coverage
 
 EOF
-  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest --maxfail=10 --timeout=300 .
+  KIVY_TEST_AUDIO=0 KIVY_NO_ARGS=1 python3 -m pytest .
+  #--maxfail=10 --timeout=300 
 }
 
 upload_coveralls() {
