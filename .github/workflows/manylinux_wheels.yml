@@ -193,8 +193,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       py: python${{ matrix.pyver }}
-      #img: quay.io/pypa/manylinux2014_aarch64
-      DISPLAY: ':99.0'
+      #DISPLAY: ':99.0'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -211,14 +210,13 @@ jobs:
             arm64v8/ubuntu \
             bash -exc 'apt-get update && \
             apt-get install -y sudo && \
-            ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt-get install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && \
+            #ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt-get install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && \
             apt install software-properties-common -y && \
             sudo add-apt-repository ppa:deadsnakes/ppa -y && \
             apt install -y ${{ env.py }} && \
             apt install -y ${{ env.py }}-venv && \
             ${{ env.py }} -m venv .env && \
             source .env/bin/activate && \
-            python --version && \
             source .ci/ubuntu_ci.sh 
             install_kivy_test_run_apt_deps
             install_kivy_test_wheel_run_pip_deps
