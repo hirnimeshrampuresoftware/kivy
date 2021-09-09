@@ -219,9 +219,9 @@ jobs:
             source .ci/ubuntu_ci.sh 
             install_kivy_test_run_apt_deps
             install_kivy_test_wheel_run_pip_deps
+            create_kivy_examples_wheel
             prepare_env_for_unittest
             install_kivy_wheel ${{ env.py }}
-            create_kivy_examples_wheel
             install_kivy_examples_wheel
             test_kivy_install && \
             if \[ ${{ matrix.pyver }} == 3.9 \] ; then
