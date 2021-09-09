@@ -185,7 +185,7 @@ jobs:
         path: .benchmarks-kivy
 
   manylinux_aarch64_wheel_test:
-    needs: [manylinux_aarch64_wheel_create]
+    needs: [manylinux_aarch64_wheel_create, kivy_examples_create]
     strategy:
       matrix:
         pyver: [ '3.6', '3.7', '3.8', '3.9' ]
@@ -203,14 +203,17 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: manylinux_wheels
-        path: dist      
+        path: dist
+    - uses: actions/download-artifact@v2
+      with:
+        name: linux_examples_wheel
+        path: dist        
     - name: Test Wheels
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
             arm64v8/ubuntu \
             bash -exc 'apt-get update && \
             apt-get install -y sudo && \
-            #ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt-get install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && \
             apt install software-properties-common -y && \
             sudo add-apt-repository ppa:deadsnakes/ppa -y && \
             apt install -y ${{ env.py }} && \
@@ -222,7 +225,12 @@ jobs:
             install_kivy_test_wheel_run_pip_deps
             prepare_env_for_unittest
             install_kivy_wheel ${{ env.py }}
+            install_kivy_examples_wheel
             test_kivy_install && \
+            if \[ ${{ matrix.pyver }} == 3.9 \] ; then
+              source .ci/ubuntu_ci.sh
+              test_kivy_benchmark
+            fi && \
             deactivate'
   
   sdist_test:
