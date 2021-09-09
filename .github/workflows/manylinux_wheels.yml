@@ -185,7 +185,7 @@ jobs:
         path: .benchmarks-kivy
 
   manylinux_aarch64_wheel_test:
-    needs: [manylinux_aarch64_wheel_create, kivy_examples_create]
+    needs: [manylinux_aarch64_wheel_create]
     strategy:
       matrix:
         pyver: [ '3.6', '3.7', '3.8', '3.9' ]
@@ -203,11 +203,7 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: manylinux_wheels
-        path: dist
-    - uses: actions/download-artifact@v2
-      with:
-        name: linux_examples_wheel
-        path: dist        
+        path: dist       
     - name: Test Wheels
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
@@ -225,6 +221,7 @@ jobs:
             install_kivy_test_wheel_run_pip_deps
             prepare_env_for_unittest
             install_kivy_wheel ${{ env.py }}
+            create_kivy_examples_wheel
             install_kivy_examples_wheel
             test_kivy_install && \
             if \[ ${{ matrix.pyver }} == 3.9 \] ; then
