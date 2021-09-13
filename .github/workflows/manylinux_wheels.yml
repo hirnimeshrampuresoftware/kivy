@@ -203,7 +203,11 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: manylinux_wheels
-        path: dist       
+        path: dist
+    - uses: actions/download-artifact@v2
+      with:
+        name: linux_examples_wheel
+        path: dist
     - name: Test Wheels
       run: |
             docker run --rm -v ${{ github.workspace }}:/io:rw --workdir=/io \
@@ -219,7 +223,6 @@ jobs:
             source .ci/ubuntu_ci.sh 
             install_kivy_test_run_apt_deps
             install_kivy_test_wheel_run_pip_deps
-            create_kivy_examples_wheel
             prepare_env_for_unittest
             install_kivy_wheel ${{ env.py }}
             install_kivy_examples_wheel
