@@ -74,8 +74,8 @@ create_kivy_examples_wheel() {
 install_kivy_examples_wheel() {
   root="$(pwd)"
   cd ~
-  python3 -m pip install --pre --no-index --no-deps -f "$root/dist" "kivy_examples"
-  python3 -m pip install --pre -f "$root/dist" "kivy_examples[full,dev]"
+  python3 -m pip install --pre --no-index --no-deps -f "$root"/dist "kivy_examples"
+  python3 -m pip install --pre -f "$root"/dist "kivy_examples[full,dev]"
 }
 
 install_kivy_wheel() {
