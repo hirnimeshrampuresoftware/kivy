@@ -1504,7 +1504,8 @@ class TextInput(FocusBehavior, Widget):
                         self._trigger_update_graphics()
                 else:
                     if self.scroll_x > 0:
-                        self.scroll_x -= self.line_height
+                        self.scroll_x = max(0, self.scroll_x -
+                                            self.line_height)
                         self._trigger_update_graphics()
             if scroll_type == 'up':
                 if self.multiline:
@@ -1516,9 +1517,12 @@ class TextInput(FocusBehavior, Widget):
                         self.scroll_y += self.line_height
                         self._trigger_update_graphics()
                 else:
-                    if (self.scroll_x + self.width <
-                            self._lines_rects[-1].texture.size[0]):
-                        self.scroll_x += self.line_height
+                    minimum_width = (self._lines_rects[-1].texture.size[0] +
+                                     self.padding[0] + self.padding[2])
+                    max_scroll_x = max(0, minimum_width - self.width)
+                    if self.scroll_x < max_scroll_x:
+                        self.scroll_x = min(max_scroll_x, self.scroll_x +
+                                            self.line_height)
                         self._trigger_update_graphics()
             return True
 
@@ -2330,9 +2334,9 @@ class TextInput(FocusBehavior, Widget):
             islice(
                 rects,
                 max(selection_start_row, first_visible_line),
-                min(selection_end_row + 1, last_visible_line),
+                min(selection_end_row + 1, last_visible_line - 1),
             ),
-            start=selection_start_row
+            start=max(selection_start_row, first_visible_line)
         ):
             draw_selection(
                 rect.pos,
@@ -2351,7 +2355,6 @@ class TextInput(FocusBehavior, Widget):
                 canvas_add,
                 selection_color
             )
-            y -= dy
         self._position_handles('both')
 
     def _draw_selection(
