@@ -178,7 +178,7 @@ jobs:
         path: .benchmarks-kivy
 
   manylinux_aarch64_wheel_test:
-    needs: [manylinux_aarch64_wheel_create]
+    needs: [manylinux_aarch64_wheel_create,kivy_examples_create]
     strategy:
       matrix:
         pyver: [ '3.6', '3.7', '3.8', '3.9' ]
