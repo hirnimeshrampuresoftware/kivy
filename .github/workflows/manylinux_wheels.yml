@@ -1,12 +1,6 @@
 name: Manylinux wheels
 
-on:
-  push:
-  pull_request:
-  create:
-  schedule:
-    - cron:  '23 1 * * *'
-
+on: [push]
 env:
   KIVY_SPLIT_EXAMPLES: 1
   SERVER_IP: '159.203.106.198'
@@ -65,7 +59,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       img: quay.io/pypa/manylinux2014_aarch64
-      #py: /opt/python/cp37-cp37m/bin/python
     steps:
     - name: Checkout
       uses: actions/checkout@v2
