@@ -87,7 +87,6 @@ install_kivy_wheel() {
 
   root="$(pwd)"
   cd ~
-
   version=$(python3 -c "import sys; print('{}{}'.format(sys.version_info.major, sys.version_info.minor))")
   if [ `uname -m` == "aarch64" ]; then
     kivy_fname=$(ls "$root"/dist/Kivy-*$version*aarch64*.whl | awk '{ print length, $0 }' | sort -n -s | cut -d" " -f2- | head -n1)
